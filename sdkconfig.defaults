@@ -1,0 +1,3 @@
+# Habilita suporte a WebSocket no esp_http_server por padrão
+CONFIG_HTTPD_WS_SUPPORT=y
+

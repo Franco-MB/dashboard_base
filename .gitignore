@@ -1,0 +1,29 @@
+# ==========================================
+# ESP-IDF (v5.5.5) - Arquivos gerados e build
+# ==========================================
+# Aplica-se recursivamente à raiz e subprojetos (ex: example/)
+build/
+sdkconfig
+sdkconfig.old
+sdkconfig.ci
+
+# Gerenciador de componentes do ESP-IDF (IDF Component Manager)
+managed_components/
+dependencies.lock
+
+# ==========================================
+# Configurações de IDE e ferramentas locais
+# ==========================================
+.vscode/
+.clangd/
+.clangd
+.agents/
+
+# ==========================================
+# Segurança: Certificados, chaves e credenciais
+# ==========================================
+*.key
+*.pem
+*.p12
+*.crt
+certs/

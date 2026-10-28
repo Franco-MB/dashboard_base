@@ -1,0 +1,14 @@
+{
+  "name": "dashboard-ihm-docker-dev",
+  "private": true,
+  "version": "2.0.0",
+  "type": "module",
+  "scripts": {
+    "start": "node mock_server.js",
+    "dev": "node mock_server.js"
+  },
+  "dependencies": {
+    "chokidar": "^4.0.3",
+    "ws": "^8.18.0"
+  }
+}

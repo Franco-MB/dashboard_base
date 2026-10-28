@@ -1,0 +1,33 @@
+services:
+
+  dashboard-dev:
+    build:
+      context: .
+      dockerfile: Dockerfile
+
+    container_name: dashboard-ihm-mock
+
+    working_dir: /app
+
+    volumes:
+      # Monta a pasta docker/ (onde está o mock_server.js)
+      - ./:/app
+
+      # Bind mount dos 3 arquivos da IHM que também serão embutidos no ESP-IDF
+      - ../main/web_gui:/app/web_gui
+
+      # Mantém o node_modules isolado dentro do volume Docker
+      - node_modules:/app/node_modules
+
+    ports:
+      - "5173:5173"
+
+    environment:
+      - PORT=5173
+      - WEB_GUI_DIR=/app/web_gui
+      - CHOKIDAR_USEPOLLING=true
+
+    restart: unless-stopped
+
+volumes:
+  node_modules:

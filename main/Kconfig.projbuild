@@ -1,0 +1,23 @@
+menu "Configuracao do Wi-Fi do Dashboard"
+
+    config ESP_WIFI_SSID
+        string "WiFi SSID (Nome da rede 2.4 GHz)"
+        default "SEU_WIFI"
+        help
+            Nome da rede Wi-Fi (SSID) na qual o ESP32 vai se conectar.
+
+    config ESP_WIFI_PASSWORD
+        string "WiFi Password (Senha da rede)"
+        default "SUA_SENHA"
+        help
+            Senha do Wi-Fi (WPA/WPA2).
+
+    config ESP_MAXIMUM_RETRY
+        int "Numero maximo de tentativas de reconexao"
+        default 5
+        help
+            Quantidade maxima de tentativas ao iniciar antes de sinalizar falha.
+            Apos conectado, se cair, ele tenta reconectar continuamente.
+
+endmenu
+

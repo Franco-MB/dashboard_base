@@ -1,0 +1,201 @@
+/* =========================================================================
+ * style.css — Estilos simples e didaticos para o Dashboard Base ESP32
+ * Voce pode alterar cores, tamanhos e layout livremente!
+ * ========================================================================= */
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: system-ui, -apple-system, sans-serif;
+    background-color: #0f172a;
+    color: #f1f5f9;
+    padding: 20px;
+    line-height: 1.5;
+}
+
+/* Cabecalho e indicador de conexao */
+.topo {
+    max-width: 960px;
+    margin: 0 auto 20px auto;
+    padding: 16px 20px;
+    background-color: #1e293b;
+    border: 1px solid #334155;
+    border-radius: 10px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+}
+
+.topo h1 {
+    font-size: 1.25rem;
+}
+
+.status-conexao {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.9rem;
+}
+
+.ponto {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    display: inline-block;
+}
+
+.ponto.conectado {
+    background-color: #22c55e;
+    box-shadow: 0 0 8px #22c55e;
+}
+
+.ponto.desconectado {
+    background-color: #ef4444;
+}
+
+code {
+    background-color: #0f172a;
+    color: #38bdf8;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-size: 0.85rem;
+}
+
+/* Grade de cartoes */
+.grade {
+    max-width: 960px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 16px;
+}
+
+.cartao {
+    background-color: #1e293b;
+    border: 1px solid #334155;
+    border-radius: 10px;
+    padding: 18px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.cartao-largo {
+    grid-column: 1 / -1;
+}
+
+.cartao h2 {
+    font-size: 1rem;
+    color: #38bdf8;
+    border-bottom: 1px solid #334155;
+    padding-bottom: 8px;
+}
+
+.dica {
+    font-size: 0.85rem;
+    color: #94a3b8;
+}
+
+/* Controles de formulario */
+input[type="text"],
+select {
+    width: 100%;
+    padding: 10px;
+    border-radius: 6px;
+    border: 1px solid #475569;
+    background-color: #0f172a;
+    color: #f8fafc;
+    font-size: 1rem;
+}
+
+/* Barra de progresso */
+progress {
+    width: 100%;
+    height: 22px;
+    border-radius: 6px;
+    overflow: hidden;
+}
+
+/* Botoes */
+.linha-botoes {
+    display: flex;
+    gap: 10px;
+}
+
+button {
+    flex: 1;
+    padding: 10px 14px;
+    border: none;
+    border-radius: 6px;
+    background-color: #2563eb;
+    color: #ffffff;
+    font-size: 0.95rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.15s, transform 0.05s;
+}
+
+button:hover {
+    background-color: #1d4ed8;
+}
+
+button:active {
+    transform: scale(0.97);
+}
+
+/* Checkbox */
+.linha-checkbox {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+    font-size: 1rem;
+}
+
+.linha-checkbox input[type="checkbox"] {
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+}
+
+/* Slider */
+input[type="range"] {
+    width: 100%;
+    cursor: pointer;
+}
+
+/* Seletor de cor */
+.linha-cor {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+input[type="color"] {
+    width: 56px;
+    height: 40px;
+    border: none;
+    border-radius: 6px;
+    background: none;
+    cursor: pointer;
+}
+
+/* Quadro de log na tela */
+#log-mensagens {
+    background-color: #0f172a;
+    border: 1px solid #334155;
+    border-radius: 6px;
+    padding: 12px;
+    font-family: monospace;
+    font-size: 0.85rem;
+    color: #a7f3d0;
+    max-height: 150px;
+    overflow-y: auto;
+    white-space: pre-wrap;
+}

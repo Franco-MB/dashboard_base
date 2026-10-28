@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Base — ESP32 WebSocket</title>
+    <link rel="stylesheet" href="/style.css">
+</head>
+
+<body>
+
+    <!-- =================================================================
+         CABECALHO: Mostra se o WebSocket (/ws) esta conectado ou nao
+         ================================================================= -->
+    <header class="topo">
+        <h1>Dashboard Base ESP32</h1>
+        <div class="status-conexao">
+            <span id="status-ponto" class="ponto desconectado"></span>
+            <span id="status-texto">Desconectado</span>
+            <code id="ws-url">ws://.../ws</code>
+        </div>
+    </header>
+
+    <main class="grade">
+
+        <!-- =============================================================
+             1. RECEBENDO DO ESP32: Caixa de texto ("ola N") + Progresso
+             O ESP32 envia a cada 1s:
+             {"tipo":"ola", "texto":"ola 1", "contador":1, "progresso":1}
+             ============================================================= -->
+        <section class="cartao">
+            <h2>1. Dados vindos do ESP32 (ESP &rarr; Pagina)</h2>
+
+            <label for="caixa-ola">Caixa de texto (incrementada pelo ESP32):</label>
+            <input type="text" id="caixa-ola" value="Aguardando ESP32..." readonly>
+
+            <label for="barra-progresso">
+                Barra de progresso: <strong id="progresso-valor">0%</strong>
+            </label>
+            <progress id="barra-progresso" value="0" max="100"></progress>
+        </section>
+
+        <!-- =============================================================
+             2. BOTOES: Enviam {"tipo":"botao", "valor":"1"} (ou "2", "3")
+             ============================================================= -->
+        <section class="cartao">
+            <h2>2. Botoes (Pagina &rarr; ESP)</h2>
+            <p class="dica">Cada clique envia <code>{"tipo":"botao","valor":"..."}</code></p>
+            <div class="linha-botoes">
+                <button type="button" class="btn-acao" data-valor="1">Botao 1</button>
+                <button type="button" class="btn-acao" data-valor="2">Botao 2</button>
+                <button type="button" class="btn-acao" data-valor="3">Botao 3</button>
+            </div>
+        </section>
+
+        <!-- =============================================================
+             3. CAIXA DE SELECAO (Checkbox)
+             Envia {"tipo":"checkbox", "valor": true/false}
+             ============================================================= -->
+        <section class="cartao">
+            <h2>3. Caixa de Selecao (Checkbox)</h2>
+            <label class="linha-checkbox">
+                <input type="checkbox" id="checkbox-exemplo">
+                <span>Ativar funcao no ESP32</span>
+            </label>
+        </section>
+
+        <!-- =============================================================
+             4. SLIDER (Controle deslizante 0 a 100)
+             Envia {"tipo":"slider", "valor": 50}
+             ============================================================= -->
+        <section class="cartao">
+            <h2>4. Slider (0 a 100)</h2>
+            <label for="slider-exemplo">
+                Valor selecionado: <strong id="slider-valor">50</strong>
+            </label>
+            <input type="range" id="slider-exemplo" min="0" max="100" value="50">
+        </section>
+
+        <!-- =============================================================
+             5. SELETOR DE COR
+             Envia {"tipo":"cor", "valor": "#38bdf8"}
+             ============================================================= -->
+        <section class="cartao">
+            <h2>5. Seletor de Cor</h2>
+            <div class="linha-cor">
+                <input type="color" id="cor-exemplo" value="#38bdf8">
+                <code id="cor-valor">#38bdf8</code>
+            </div>
+        </section>
+
+        <!-- =============================================================
+             6. DROPDOWN (Lista de opcoes)
+             Envia {"tipo":"dropdown", "valor": "opcao1"}
+             ============================================================= -->
+        <section class="cartao">
+            <h2>6. Dropdown (Lista de Opcoes)</h2>
+            <label for="dropdown-exemplo">Escolha um modo:</label>
+            <select id="dropdown-exemplo">
+                <option value="opcao1">Opcao 1 — Lento</option>
+                <option value="opcao2">Opcao 2 — Normal</option>
+                <option value="opcao3">Opcao 3 — Rapido</option>
+            </select>
+        </section>
+
+        <!-- =============================================================
+             7. MONITOR DE TRAFEGO WEBSOCKET NA TELA
+             Mostra os JSONs enviados pela pagina para facilitar seus testes
+             ============================================================= -->
+        <section class="cartao cartao-largo">
+            <h2>Monitor de Comandos Enviados (Pagina &rarr; ESP32)</h2>
+            <p class="dica">
+                Dica: voce tambem pode abrir o Console do navegador (F12) e digitar
+                <code>enviar("botao", "teste")</code>
+            </p>
+            <pre id="log-mensagens">Nenhum comando enviado ainda. Clique em qualquer controle acima!</pre>
+        </section>
+
+    </main>
+
+    <script src="/app.js"></script>
+</body>
+
+</html>
