@@ -4,29 +4,26 @@
  * Alvo: ESP-IDF v5.5.x (C Puro)
  *
  * O QUE ESTE ARQUIVO FAZ:
- *   1. Conecta no Wi-Fi usando wifi_init_sta() (configurado no menuconfig).
- *   2. Serve os 3 arquivos da pasta main/web_gui/ (index.html, style.css, app.js).
- *   3. Abre o WebSocket em /ws:
+ *   1. Serve os 3 arquivos da pasta main/web_gui/ (index.html, style.css, app.js)
+ *      na porta CONFIG_DASHBOARD_PORT (padrão 8080, evitando conflito com a porta 80 do MicroLink).
+ *   2. Abre o WebSocket em /ws:
  *      - Tudo que o navegador envia chega em tratar_mensagem() e vai para o LOG.
  *      - A cada 1 segundo, a task tarefa_ola() envia para o navegador:
  *        {"tipo":"ola","texto":"ola N","contador":N,"progresso":P}
  * ============================================================================
  */
 
+#include "dashboard_portal.h"
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 #include <stdbool.h>
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
 #include "esp_log.h"
 #include "esp_system.h"
-#include "nvs_flash.h"
-#include "esp_event.h"
-#include "esp_netif.h"
 #include "esp_http_server.h"
 #include "cJSON.h"
-
-#include "wifi_station.h"
 
 static const char *TAG = "DASHBOARD";
 
@@ -239,14 +236,24 @@ static void tarefa_ola(void *pvParameters)
 /* ============================================================================
  * 6. INICIALIZACAO DO SERVIDOR HTTP + WEBSOCKET
  * ============================================================================ */
-static void start_webserver(void)
+esp_err_t dashboard_portal_start(void)
 {
+    if (g_server != NULL) {
+        ESP_LOGW(TAG, "Dashboard ja esta em execucao");
+        return ESP_OK;
+    }
+
     httpd_config_t config = HTTPD_DEFAULT_CONFIG();
+    config.server_port      = CONFIG_DASHBOARD_PORT;
+    config.ctrl_port        = 32769; /* Avoid collision with microlink config httpd (32768) */
+    config.max_open_sockets = 4;
+    config.lru_purge_enable = true;
     config.max_uri_handlers = 8;
 
-    if (httpd_start(&g_server, &config) != ESP_OK) {
-        ESP_LOGE(TAG, "Erro ao iniciar o servidor HTTP!");
-        return;
+    esp_err_t err = httpd_start(&g_server, &config);
+    if (err != ESP_OK) {
+        ESP_LOGE(TAG, "Erro ao iniciar o servidor HTTP do Dashboard: %s", esp_err_to_name(err));
+        return err;
     }
 
     const httpd_uri_t index_uri = {
@@ -275,29 +282,10 @@ static void start_webserver(void)
     httpd_register_uri_handler(g_server, &style_uri);
     httpd_register_uri_handler(g_server, &app_js_uri);
     httpd_register_uri_handler(g_server, &ws_uri);
-}
 
-/* ============================================================================
- * 7. PONTO DE ENTRADA (app_main)
- * ============================================================================ */
-void app_main(void)
-{
-    /* 1. Inicializa NVS (usado pelo driver Wi-Fi para calibracao/config) */
-    esp_err_t ret = nvs_flash_init();
-    if (ret == ESP_ERR_NVS_NO_FREE_PAGES || ret == ESP_ERR_NVS_NEW_VERSION_FOUND) {
-        ESP_ERROR_CHECK(nvs_flash_erase());
-        ret = nvs_flash_init();
-    }
-    ESP_ERROR_CHECK(ret);
-
-    /* 2. Inicializa a pilha de rede (TCP/IP) e o loop de eventos padrao */
-    ESP_ERROR_CHECK(esp_netif_init());
-    ESP_ERROR_CHECK(esp_event_loop_create_default());
-
-    /* 3. Conecta ao Wi-Fi usando o modulo wifi_station (exemplo oficial) */
-    wifi_init_sta();
-
-    /* 4. Inicia o servidor HTTP + WebSocket e a tarefa que envia "ola N" */
-    start_webserver();
     xTaskCreate(tarefa_ola, "tarefa_ola", 4096, NULL, 5, NULL);
+
+    ESP_LOGI(TAG, "Dashboard web iniciado na porta %d", config.server_port);
+    return ESP_OK;
 }
+

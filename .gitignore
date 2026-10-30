@@ -5,6 +5,7 @@
 build/
 sdkconfig
 sdkconfig.old
+sdkconfig.pre_tailscale
 sdkconfig.ci
 
 # Gerenciador de componentes do ESP-IDF (IDF Component Manager)

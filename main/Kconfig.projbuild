@@ -1,23 +1,44 @@
-menu "Configuracao do Wi-Fi do Dashboard"
+menu "Example Configuration"
 
-    config ESP_WIFI_SSID
-        string "WiFi SSID (Nome da rede 2.4 GHz)"
-        default "SEU_WIFI"
+    config ML_WIFI_SSID
+        string "WiFi SSID"
+        default ""
         help
-            Nome da rede Wi-Fi (SSID) na qual o ESP32 vai se conectar.
+            SSID of the WiFi network to connect to.
+            This is stored in sdkconfig which should be git-ignored.
 
-    config ESP_WIFI_PASSWORD
-        string "WiFi Password (Senha da rede)"
-        default "SUA_SENHA"
+    config ML_WIFI_PASSWORD
+        string "WiFi Password"
+        default ""
         help
-            Senha do Wi-Fi (WPA/WPA2).
+            Password for the WiFi network.
+            This is stored in sdkconfig which should be git-ignored.
 
-    config ESP_MAXIMUM_RETRY
-        int "Numero maximo de tentativas de reconexao"
-        default 5
+    config ML_TAILSCALE_AUTH_KEY
+        string "Tailscale Auth Key"
+        default ""
         help
-            Quantidade maxima de tentativas ao iniciar antes de sinalizar falha.
-            Apos conectado, se cair, ele tenta reconectar continuamente.
+            Tailscale authentication key from https://login.tailscale.com/admin/settings/keys
+            Generate a reusable + ephemeral key for development.
+            This is stored in sdkconfig which should be git-ignored.
+
+    config ML_EXAMPLE_TARGET_PEER_IP
+        string "Target Peer VPN IP (for sending)"
+        default ""
+        help
+            VPN IP of the peer to send "hello" messages to (e.g., "100.103.181.24").
+            Leave empty to only receive (no outgoing messages).
+            The peer should run: nc -lu 9000
 
 endmenu
 
+menu "Dashboard Configuration"
+
+    config DASHBOARD_PORT
+        int "Dashboard HTTP/WebSocket port"
+        default 8080
+        help
+            TCP port for the Dashboard web portal and WebSocket (/ws).
+            Default is 8080 to avoid conflict with MicroLink config httpd (port 80).
+
+endmenu
